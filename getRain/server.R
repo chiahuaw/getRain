@@ -18,16 +18,34 @@ shinyServer(function(input, output) {
   if (grepl(0.0001,rain[as.character(rain$V1)==(Sys.Date()-1),2])==TRUE) {
     year<-format(Sys.Date(),format="%Y")
     rain<-getrain(year)
+    #存檔
+    path<-paste("data/",year,"_rain.csv",sep="")
+    write.csv(rain,file = path ,fileEncoding="UTF-8",row.names=FALSE)
+    
     rain<-rbind(dat,rain)
   }
   
-  output$plotyear <- renderPlot({
+  rain2<-filter(rain,V2!=0.0001)
+  
+  output$plot1 <- renderPlot({
 
-    ggplot(filter(rain,format(rain$V1,format="%Y")==input$years),aes(x=V1,y=V2))+
-      geom_line()+
+    ggplot(filter(rain2,format(rain2$V1,format="%Y")==input$years),aes(x=V1,y=V2))+
+      geom_line(colour="blue")+
       labs(x="日期", y="雨量") + thm() + 
       scale_x_date(labels=date_format("%m"), breaks = date_breaks("1 month"))
 
   })
+  
+  output$plot2 <- renderPlot({
+    
+    ggplot(filter(rain2,format(rain2$V1,format="%Y")==input$years,format(rain2$V1,format="%m")==input$month),aes(x=V1,y=V2))+
+      geom_line(colour="blue")+
+      labs(x="日期", y="雨量") + thm() + 
+      scale_x_date(labels=date_format("%d"), breaks = date_breaks("1 days"))
+    
+  })
+  
+  output$table<-renderDataTable(filter(rain2,format(rain2$V1,format="%Y")==input$years)) 
 
 })
+

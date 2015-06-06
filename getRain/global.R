@@ -71,6 +71,9 @@ for (y in 2006:(as.numeric(year)-1)) {
   if ( y==(as.numeric(year)-1)) {
     if (grepl(0.0001,dat[nrow(a),2])==TRUE) {
       a<-getrain(year-1)
+      #存檔
+      path<-paste("data/",year-1,"_rain.csv",sep="")
+      write.csv(a,file = path ,fileEncoding="UTF-8",row.names=FALSE)
     }
   }
   
@@ -89,7 +92,11 @@ if (system(paste("ls data/",year,"_rain.csv",sep=""))==0) {
   rain<-read.csv(f)
   #rain<-rain[,-1]
   if (grepl(0.0001,rain[as.character(rain$V1)==(Sys.Date()-1),2])==TRUE) {
-   rain<-getrain(year) 
+   rain<-getrain(year)
+   
+   #存檔
+   path<-paste("data/",year,"_rain.csv",sep="")
+   write.csv(rain,file = path ,fileEncoding="UTF-8",row.names=FALSE)
   }
   rain[,1]<-as.Date(rain[,1])
   rain[,2]<-as.numeric(as.character(rain[,2]))
@@ -99,9 +106,11 @@ if (system(paste("ls data/",year,"_rain.csv",sep=""))==1) {
   if (format(Sys.Date(),format="%m-%d")=="01-01") {
     rain<-c(0,0)
   }
-  else { rain<-getrain(year) }
+  else { 
+    rain<-getrain(year) 
+    #存檔
+    path<-paste("data/",year,"_rain.csv",sep="")
+    write.csv(rain,file = path ,fileEncoding="UTF-8",row.names=FALSE)
+  }
 }
 
-#存檔
-path<-paste("data/",year,"_rain.csv",sep="")
-write.csv(rain,file = path ,fileEncoding="UTF-8",row.names=FALSE)
