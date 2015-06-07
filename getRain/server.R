@@ -15,7 +15,7 @@ rain<-rbind(dat,rain)
 shinyServer(function(input, output) {
   #檢查資料更新狀況
   
-  if (grepl(0.0001,rain[as.character(rain$V1)==(Sys.Date()-1),2])==TRUE) {
+  if (grepl(0.0001,rain[as.character(rain$V1)==(Sys.Date()-2),2])==TRUE) {
     year<-format(Sys.Date(),format="%Y")
     rain<-getrain(year)
     #存檔
@@ -46,6 +46,13 @@ shinyServer(function(input, output) {
   })
   
   output$table<-renderDataTable(filter(rain2,format(rain2$V1,format="%Y")==input$years)) 
+  
+  output$downloadData <- downloadHandler(
+    filename = function() { paste(input$years, '_rain.csv', sep='') },
+    content = function(file) {
+      write.csv(filter(rain,format(rain$V1,format="%Y")==input$years), file,row.names=FALSE)
+    }
+  )
 
 })
 

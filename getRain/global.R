@@ -91,7 +91,7 @@ if (system(paste("ls data/",year,"_rain.csv",sep=""))==0) {
   f<-file(path)
   rain<-read.csv(f)
   #rain<-rain[,-1]
-  if (grepl(0.0001,rain[as.character(rain$V1)==(Sys.Date()-1),2])==TRUE) {
+  if (grepl(0.0001,rain[as.character(rain$V1)==(Sys.Date()-2),2])==TRUE) {
    rain<-getrain(year)
    
    #存檔
